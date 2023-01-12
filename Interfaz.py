@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import Recomendador
 
 
 class Ui_MainWindow(object):
@@ -46,7 +47,8 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Buscar"))
 
     def button_clicked(self):
-            print(self.textEdit.toPlainText())
+        film = self.textEdit.toPlainText()
+        
 
 if __name__ == "__main__":
     import sys
