@@ -31,6 +31,10 @@ genre_popularity = (movies.genres.str.split('|')
                       .value_counts()
                       .sort_values(ascending=False))
 
+tf = TfidfVectorizer(analyzer=lambda s: (c for i in range(1,4)
+                                             for c in combinations(s.split('|'), r=i)))
+tfidf_matrix = tf.fit_transform(movies['genres'])
+
 cosine_sim = cosine_similarity(tfidf_matrix)
 
 cosine_sim_df = pd.DataFrame(cosine_sim, index=movies['title'], columns=movies['title'])
