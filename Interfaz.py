@@ -9,7 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import Recomendador
+import PelisSimilares as ps
 
 
 class Ui_MainWindow(object):
@@ -48,7 +48,8 @@ class Ui_MainWindow(object):
 
     def button_clicked(self):
         film = self.textEdit.toPlainText()
-        
+        ps.genre_recommendations(film, ps.cosine_sim_df, ps.movies[['title', 'genres']])
+
 
 if __name__ == "__main__":
     import sys
