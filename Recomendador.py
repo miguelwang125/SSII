@@ -7,10 +7,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt 
 
+<<<<<<< HEAD
 from bs4 import BeautifulSoup
 import requests
 import time
 
+=======
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 # In[2]:
 
@@ -28,7 +31,10 @@ df_ratings = pd.read_csv('ratings.csv')
 
 
 df_links = pd.read_csv('links.csv', dtype = object)
+<<<<<<< HEAD
 df_links.fillna(value=0, inplace=True)
+=======
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 
 # In[5]:
@@ -43,13 +49,21 @@ df_tags = pd.read_csv('tags.csv')
 
 
 
+<<<<<<< HEAD
 # In[ ]:
+=======
+# In[8]:
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 
 df_movies
 
 
+<<<<<<< HEAD
 # In[ ]:
+=======
+# In[6]:
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 
 df_ratings
@@ -58,9 +72,33 @@ df_ratings
 # In[ ]:
 
 
+<<<<<<< HEAD
 df_links
 
 
+=======
+df_ratings
+
+
+# In[10]:
+
+
+df_links
+
+
+# In[15]:
+
+
+
+
+
+# In[48]:
+
+
+
+
+
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 # In[ ]:
 
 
@@ -70,6 +108,7 @@ df_tags
 # In[ ]:
 
 
+<<<<<<< HEAD
 
 
 
@@ -200,22 +239,71 @@ df.to_csv('sinopsis.csv', index=False)
 # In[ ]:
 
 
+=======
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 link = "https://www.themoviedb.org/movie/" + df_links["tmdbId"][0]
 
 
 # In[ ]:
 
 
+<<<<<<< HEAD
 bs = BeautifulSoup(r.content, "html.parser")
+=======
+header = {"accept-language": "es-ES"}
+
+for i in df_links["tmdbId"]:
+    link = "https://www.themoviedb.org/movie/" + i
+    r = requests.get(link, headers = header)
+    bs = BeautifulSoup(r.content, "html.parser")
+    print(bs.p.get_text())
+
+
+# In[14]:
+
+
+
+
+
+# In[41]:
+
+
+header = {"accept-language": "es-ES"}
+
+
+# In[42]:
+
+
+r = requests.get(link, headers = header)
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 
 # In[ ]:
+
+
+<<<<<<< HEAD
+print (bs.prettify)
+
+
+# In[ ]:
+=======
+
+
+
+# In[43]:
+
+
+bs = BeautifulSoup(r.content, "html.parser")
+
+
+# In[44]:
 
 
 print (bs.prettify)
 
 
-# In[ ]:
+# In[46]:
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 
 print(bs.p.get_text())
@@ -242,6 +330,7 @@ print(bs.p.get_text())
 # In[ ]:
 
 
+<<<<<<< HEAD
 
 
 
@@ -255,6 +344,48 @@ print(bs.p.get_text())
 
 
 
+=======
+# Leer el archivo CSV
+with open('links.csv', 'r') as file:
+    reader = csv.reader(file)
+    data = [row for row in reader]
+    
+# Realizar una búsqueda en la web para cada elemento de la lista
+for imdbId in data:
+    url = "https://www.imdb.com/title/tt"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    results = soup.find_all('div', class_='result')
+    for result in results:
+        print(result.text)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+import pandas as pd
+import requests
+
+# Leer el archivo CSV usando Pandas
+df = pd.read_csv("links.csv")
+
+# Recorrer las filas de una columna específica
+for valor in df['imdbId']:
+    # Hacer una solicitud a una página web
+    respuesta = requests.get("https://www.imdb.com")
+
+    # Buscar el valor de la columna en la página
+    if valor in respuesta.text:
+        print(valor + " encontrado en la página")
+    else:
+        print(valor + " no encontrado en la página")
+>>>>>>> 67d2e81e1f95ff01bfa8cfe6c5d935e84bd7b6e6
 
 
 # In[ ]:
