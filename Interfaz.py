@@ -11,26 +11,33 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import PelisSimilares as ps
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(796, 604)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(630, 470, 75, 23))
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget) # Boton Ranking
+        self.pushButton.setGeometry(QtCore.QRect(710, 530, 75, 23))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.clicked.connect(self.button_clicked)
 
-        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit.setGeometry(QtCore.QRect(190, 130, 221, 31))
+        self.textEdit = QtWidgets.QTextEdit(self.centralwidget) # Text edit 
+        self.textEdit.setGeometry(QtCore.QRect(10, 10, 221, 31))
         self.textEdit.setObjectName("textEdit")
+
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget) # Boton Informacion
+        self.pushButton_2.setGeometry(QtCore.QRect(620, 530, 75, 23))
+        self.pushButton_2.setObjectName("pushButton_2")
+
+        self.plainTextEdit = QtWidgets.QPlainTextEdit(self.centralwidget) # Text Area
+        self.plainTextEdit.setGeometry(QtCore.QRect(10, 80, 771, 391))
+        self.plainTextEdit.setObjectName("plainTextEdit")
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 796, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -39,17 +46,17 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "Buscar"))
+        self.pushButton.setText(_translate("MainWindow", "Ranking"))
+        self.pushButton_2.setText(_translate("MainWindow", "Informacion"))
 
     def button_clicked(self):
         film = self.textEdit.toPlainText()
-        ps.genre_recommendations(film, ps.cosine_sim_df, ps.movies[['title', 'genres']])
-
+        ranking = ps.genre_recommendations(film, ps.cosine_sim_df, ps.movies[['title', 'genres']])
+        self.plainTextEdit.setPlainText(str(ranking))
 
 if __name__ == "__main__":
     import sys
