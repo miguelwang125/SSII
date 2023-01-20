@@ -34,6 +34,7 @@ class Ui_MainWindow(object):
         self.plainTextEdit = QtWidgets.QPlainTextEdit(self.centralwidget) # Text Area
         self.plainTextEdit.setGeometry(QtCore.QRect(10, 80, 771, 391))
         self.plainTextEdit.setObjectName("plainTextEdit")
+        self.plainTextEdit.setReadOnly(True)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
