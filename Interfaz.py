@@ -122,8 +122,9 @@ class Ui_MainWindow(object):
         self.plainTxtUser.setPlainText(str(o2.RecomendacionDadoUsuario()))
     
     def btnInformation_clicked(self):
-        film = self.txtEditUser.toPlainText()
-        print(recom.get_sinopsis(film))
+        film = self.txtEditInfo.toPlainText()
+        sinopsis = recom.get_sinopsis(film)
+        print(sinopsis)
 
 if __name__ == "__main__":
     import sys
