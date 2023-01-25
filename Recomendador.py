@@ -231,6 +231,47 @@ sinopsis = get_sinopsis(title)
 print(sinopsis)
 
 
+# In[57]:
+
+
+def get_movie_info(movieId, title):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
+
+    # Buscar la pelicula en el archivo CSV
+    for i, row in df.iterrows():
+        if row[title] == movieId:
+            return row[["movieId", "titulo", "genero","sinopsis"]]
+    return "Pelicula no encontrada"
+
+# Ejemplo de uso
+movieId = 1
+title = "Toy Story (1995)"
+movie_info = get_movie_info(movieId, title)
+print(movie_info)
+
+
+# In[62]:
+
+
+def get_movie_info(buscar):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
+    search_by = {"id": "movieId", "titulo": "title"}
+    
+    # Buscar la pelicula en el archivo CSV
+    for i, row in df.iterrows():
+        if row[search_by[buscar[0]]] == buscar[1]:
+            return row[["movieId", "title", "genres","sinopsis"]]
+    return "Pelicula no encontrada"
+
+# Ejemplo de uso mediante id y titulo
+buscar = ("id", 1)
+buscar = ("titulo", "Toy Story (1995)")
+movie_info = get_movie_info(buscar)
+print(movie_info)
+
+
 # In[ ]:
 
 
