@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[6]:
-
-
 import pandas as pd
 import matplotlib.pyplot as plt 
 
@@ -22,6 +16,8 @@ df_ratings = pd.read_csv('ratings.csv')
 df_links = pd.read_csv('links.csv', dtype = object)
 df_links.fillna(value=0, inplace=True)
 df_tags = pd.read_csv('tags.csv')
+df_sinopsis = pd.read_csv('sinopsis.csv')
+df_usuario = pd.read_csv('Usuario_0.csv')
 
 header = {"accept-language": "es-ES"}
 
@@ -46,9 +42,6 @@ header = {"accept-language": "es-ES"}
 #     return df_sinopsis
 # df_sinopsis = sacar_sinopsis(df_links, header)
 
-df_sinopsis = pd.read_csv('sinopsis.csv')
-
-df_usuario = pd.read_csv('Usuario_0.csv')
 
 def juntarMoviesSinopsis(df_movies, df_sinopsis, movieId, movies_sinopsis):
     # Unir los dataframes en función de la columna 'movieId'

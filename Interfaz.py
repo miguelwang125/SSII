@@ -11,7 +11,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import Recomendador_general as rg
 import Predicciones_usuario as pu
 import WebScraping as ws
-import pandas as pd
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -24,6 +23,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setGeometry(QtCore.QRect(0, 0, 801, 591))
         self.tabWidget.setObjectName("tabWidget")
 
+        # Tab General, Objetivo 1
         self.tabGeneral = QtWidgets.QWidget()
         self.tabGeneral.setObjectName("tabGeneral")
         self.plainTxtGeneral = QtWidgets.QPlainTextEdit(self.tabGeneral)
@@ -48,6 +48,7 @@ class Ui_MainWindow(object):
         self.lblErrorGeneral.setObjectName("lblErrorGeneral")
         self.tabWidget.addTab(self.tabGeneral, "")
 
+        # Tab Usuario, Objetivo 2
         self.tabUser = QtWidgets.QWidget()
         self.tabUser.setObjectName("tabUser")
         self.txtEditUser = QtWidgets.QTextEdit(self.tabUser)
@@ -76,6 +77,7 @@ class Ui_MainWindow(object):
         self.lblErrorUser.setObjectName("lblErrorUser")
         self.tabWidget.addTab(self.tabUser, "")
 
+        # Tab Informacion, WebScraping
         self.tabInformacion = QtWidgets.QWidget()
         self.tabInformacion.setObjectName("tabInformacion")
         self.plainTxtInfo = QtWidgets.QPlainTextEdit(self.tabInformacion)

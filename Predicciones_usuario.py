@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
 def predecir_puntuacion(film):
     # Lectura de los de CSV
@@ -23,11 +24,12 @@ def predecir_puntuacion(film):
     # y = rating de las pelis vistas
     y = peliculas_vistas["rating"]
     
-    from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
     model = LinearRegression().fit(X_train, y_train)
     
     y_pred = model.predict(X_test)
+    
+    prueba = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 
     # Seleccionar la película con el título
     peliculas_novistas = movies[movies["title"]== film]
