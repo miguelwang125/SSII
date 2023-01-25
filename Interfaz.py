@@ -10,6 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import PelisSimilares as ps
 import Objetivo2_final as o2
+import Recomendador as recom
 import pandas as pd
 
 class Ui_MainWindow(object):
@@ -122,8 +123,7 @@ class Ui_MainWindow(object):
     
     def btnInformation_clicked(self):
         film = self.txtEditUser.toPlainText()
-        sinopsis = pd.read_csv("movies_sinopsis.csv")
-        print(sinopsis[sinopsis["title"]== film])
+        print(recom.get_sinopsis(film))
 
 if __name__ == "__main__":
     import sys
