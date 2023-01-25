@@ -14,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 
 
 #OBJETIVO 2.1
-def predecir_puntuacion():
+def predecir_puntuacion(film):
     # Lectura de los de CSV
     usuario = pd.read_csv("Usuario_0.csv")
     movies = pd.read_csv("movies.csv")
@@ -51,11 +51,11 @@ def predecir_puntuacion():
     #print(prueba)
     
     # score = precisión del modelo
-    print("score: ")
-    print(model.score(X_test, y_test))
+    #print("score: ")
+    #print(model.score(X_test, y_test))
 
     # Seleccionar la película con el título
-    peliculas_novistas = movies[movies["title"]== "Lamerica (1994)"]
+    peliculas_novistas = movies[movies["title"]== film]
 
     # Vectorizar la pelicula elegida
     peliculas_novistas_vectorized = coun_vect.transform(peliculas_novistas["genres"])
@@ -65,10 +65,9 @@ def predecir_puntuacion():
     
     # predecir la puntuación de la pelicula seleccionada
     predicted_rating = model.predict(noVista)
-    print(predicted_rating)
+    #print(predicted_rating)
+    return predicted_rating
     #print (peliculas_novistas[["genres"]])
-
-predecir_puntuacion()
     
 
 
@@ -122,7 +121,7 @@ def RecomendacionDadoUsuario():
 
     # predecir la puntuacion de las peliculas no vistas
     y_pred = model.predict(X_no_vistas)
-    print(y_pred)
+    #print(y_pred)
 
     # añade la puntuacion predicha al dataframe de peliculas no vistas
     movies_noRatings["predicted_rating"] = y_pred
@@ -131,10 +130,11 @@ def RecomendacionDadoUsuario():
     movies_noRatings = movies_noRatings.sort_values(by="predicted_rating", ascending=False)
 
     # imprime las 10 primeras peliculas luego de ser ordenadas, estas son las recomendadas
-    print(movies_noRatings["title"].head(10))
-    print(movies_noRatings.head(10))
+    #print(movies_noRatings["title"].head(10))
+    #print(movies_noRatings.head(10))
+
+    return movies_noRatings["title"].head(10)
     
-RecomendacionDadoUsuario()
 
 
 # In[ ]:

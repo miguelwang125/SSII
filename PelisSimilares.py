@@ -1,41 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[22]:
-
-
-#def weighted_average_score(df, k=0.8):
-    #n_views = df.groupby('movieId', sort=False).movieId.count()
-    #ratings = df.groupby('movieId', sort=False).rating.mean()
-    #scores = ((1-k)*(n_views/n_views.max()) + 
-              #k*(ratings/ratings.max())).to_numpy().argsort()[::-1]
-    #df_deduped = df.groupby('movieId', sort=False).agg({'title':'first', 
-                                                         #'genres':'first', 
-                                                         #'rating':'mean'})
-    #return df_deduped.assign(views=n_views).iloc[scores]
-
-
-# In[24]:
-
-
-#df = movies.merge(ratings)
-#weighted_average_score(df).head(10)
-
-
-# In[51]:
-
-
-#cuanta cuantas peliculas de cada genero hay
-#genre_popularity = (movies.genres.str.split('|')
-                      #.explode()
-                      #.value_counts()
-                      #.sort_values(ascending=False))
-#genre_popularity.head(10)
-
-
-# In[43]:
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,39 +9,35 @@ import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
+ratings = pd.read_csv("ratings.csv", encoding='latin-1', usecols=['userId', 'movieId', 'rating'])
+#users = pd.read_csv("Usuario_0.csv", encoding='latin-1' ,usecols=['movieId', 'title', 'rating'])
+movies = pd.read_csv("movies.csv", encoding='latin-1' ,usecols=['movieId', 'title', 'genres'])
 
-# In[27]:
+def weighted_average_score(df, k=0.8):
+    n_views = df.groupby('movieId', sort=False).movieId.count()
+    ratings = df.groupby('movieId', sort=False).rating.mean()
+    scores = ((1-k)*(n_views/n_views.max()) + 
+              k*(ratings/ratings.max())).to_numpy().argsort()[::-1]
+    df_deduped = df.groupby('movieId', sort=False).agg({'title':'first', 
+                                                         'genres':'first', 
+                                                         'rating':'mean'})
+    return df_deduped.assign(views=n_views).iloc[scores]
 
+df = movies.merge(ratings)
+weighted_average_score(df).head(10)
+
+genre_popularity = (movies.genres.str.split('|')
+                      .explode()
+                      .value_counts()
+                      .sort_values(ascending=False))
 
 tf = TfidfVectorizer(analyzer=lambda s: (c for i in range(1,4)
                                              for c in combinations(s.split('|'), r=i)))
 tfidf_matrix = tf.fit_transform(movies['genres'])
 
-
-# In[30]:
-
-
 cosine_sim = cosine_similarity(tfidf_matrix)
 
-
-# In[31]:
-
-
 cosine_sim_df = pd.DataFrame(cosine_sim, index=movies['title'], columns=movies['title'])
-
-#print('Shape:', cosine_sim_df.shape)
-#cosine_sim_df.sample(10, axis=1).round(2)
-
-
-# In[44]:
-
-
-ratings = pd.read_csv("ratings.csv", encoding='latin-1', usecols=['userId', 'movieId', 'rating'])
-movies = pd.read_csv("movies.csv", encoding='latin-1' ,usecols=['movieId', 'title', 'genres'])
-
-
-# In[45]:
-
 
 def genre_recommendations(i, M, items, k=10):
     """
@@ -99,87 +60,4 @@ def genre_recommendations(i, M, items, k=10):
     closest = closest.drop(i, errors='ignore')
     return pd.DataFrame(closest).merge(items).head(k)
 
-
-# In[46]:
-
-
-movies[movies.title.eq('Toy Story (1995)')]
-
-
-# In[49]:
-
-
 genre_recommendations('Coco (2017)', cosine_sim_df, movies[['title', 'genres']])
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
