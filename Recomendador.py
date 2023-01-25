@@ -228,8 +228,8 @@ def get_sinopsis(title):
         if row["title"] == title:
             return row["sinopsis"]
     return "Sinopsis no encontrada"
-
-# # Ejemplo de uso
+    
+# Ejemplo de uso
 # title = "Toy Story (1995)"
 # sinopsis = get_sinopsis(title)
 # print(sinopsis)
