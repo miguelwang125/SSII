@@ -14,7 +14,7 @@ from sklearn.linear_model import LinearRegression
 
 
 #OBJETIVO 2.1
-def predecir_puntuacion():
+def predecir_puntuacion(film):
     # Lectura de los de CSV
     usuario = pd.read_csv("Usuario_0.csv")
     movies = pd.read_csv("movies.csv")
@@ -55,7 +55,7 @@ def predecir_puntuacion():
     print(model.score(X_test, y_test))
 
     # Seleccionar la película con el título
-    peliculas_novistas = movies[movies["title"]== "Lamerica (1994)"]
+    peliculas_novistas = movies[movies["title"]== film]
 
     # Vectorizar la pelicula elegida
     peliculas_novistas_vectorized = coun_vect.transform(peliculas_novistas["genres"])
@@ -66,9 +66,8 @@ def predecir_puntuacion():
     # predecir la puntuación de la pelicula seleccionada
     predicted_rating = model.predict(noVista)
     print(predicted_rating)
+    return predicted_rating
     #print (peliculas_novistas[["genres"]])
-
-predecir_puntuacion()
     
 
 
@@ -134,7 +133,6 @@ def RecomendacionDadoUsuario():
     print(movies_noRatings["title"].head(10))
     print(movies_noRatings.head(10))
     
-RecomendacionDadoUsuario()
 
 
 # In[ ]:
