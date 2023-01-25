@@ -10,7 +10,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import PelisSimilares as ps
 import Objetivo2_final as o2
-
+import pandas as pd
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -28,6 +28,7 @@ class Ui_MainWindow(object):
         self.plainTxtGeneral = QtWidgets.QPlainTextEdit(self.tabGeneral)
         self.plainTxtGeneral.setGeometry(QtCore.QRect(10, 80, 771, 391))
         self.plainTxtGeneral.setObjectName("plainTxtGeneral")
+        self.plainTxtGeneral.setReadOnly(True)
         self.txtEditGeneral = QtWidgets.QTextEdit(self.tabGeneral)
         self.txtEditGeneral.setGeometry(QtCore.QRect(10, 30, 221, 31))
         self.txtEditGeneral.setObjectName("txtEditGeneral")
@@ -49,6 +50,7 @@ class Ui_MainWindow(object):
         self.plainTxtUser = QtWidgets.QPlainTextEdit(self.tabUser)
         self.plainTxtUser.setGeometry(QtCore.QRect(10, 80, 771, 391))
         self.plainTxtUser.setObjectName("plainTxtUser")
+        self.plainTxtUser.setReadOnly(True)
         self.btnPredict = QtWidgets.QPushButton(self.tabUser)
         self.btnPredict.setGeometry(QtCore.QRect(710, 520, 75, 23))
         self.btnPredict.setObjectName("btnPredict")
@@ -106,20 +108,22 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tabInformacion), _translate("MainWindow", "Informacion"))
 
     def btnRanking_clicked(self):
-            film = self.textEdit.toPlainText()
-            ranking = ps.genre_recommendations(film, ps.cosine_sim_df, ps.movies[['title', 'genres']])
-            self.plainTextEdit.setPlainText(str(ranking))
+        film = self.txtEditGeneral.toPlainText()
+        ranking = ps.genre_recommendations(film, ps.cosine_sim_df, ps.movies[['title', 'genres']])
+        self.plainTxtGeneral.setPlainText(str(ranking))
 
     def btnPredict_clicked(self):
-        film = self.textEdit.toPlainText()
+        film = self.txtEditUser.toPlainText()
         rating = o2.predecir_puntuacion(film)
-        self.plainTextEdit.setPlainText(str(rating))
+        self.plainTxtUser.setPlainText(str(rating))
 
     def btnRankingUser_clicked(self):
-            print("Hola")
+        self.plainTxtUser.setPlainText(str(o2.RecomendacionDadoUsuario()))
     
     def btnInformation_clicked(self):
-            print("Hola")
+        film = self.txtEditUser.toPlainText()
+        sinopsis = pd.read_csv("movies_sinopsis.csv")
+        print(sinopsis[sinopsis["title"]== film])
 
 if __name__ == "__main__":
     import sys
