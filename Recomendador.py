@@ -8,6 +8,12 @@ import requests
 from bs4 import BeautifulSoup
 import requests
 import time
+import re
+
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import SnowballStemmer
 
 
 # In[ ]:
@@ -41,7 +47,7 @@ df_tags = pd.read_csv('tags.csv')
 
 
 
-# In[22]:
+# In[ ]:
 
 
 df_movies
@@ -77,7 +83,7 @@ df_tags
 header = {"accept-language": "es-ES"}
 
 
-# In[ ]:
+# In[32]:
 
 
 def sacar_sinopsis(df_links, header):
@@ -99,11 +105,6 @@ def sacar_sinopsis(df_links, header):
     df_sinopsis = pd.DataFrame(results,columns=['movieId','tmdbId','sinopsis'])
     df_sinopsis.to_csv('sinopsis.csv', index=False)
     return df_sinopsis
-
-
-# In[ ]:
-
-
 df_sinopsis = sacar_sinopsis(df_links, header)
 
 
@@ -113,55 +114,13 @@ df_sinopsis = sacar_sinopsis(df_links, header)
 
 
 
-# In[7]:
-
-
-link = "https://www.themoviedb.org/movie/" + df_links["tmdbId"][0]
-
-
-# In[8]:
-
-
-r = requests.get(link, headers = header)
-
-
-# In[9]:
-
-
-bs = BeautifulSoup(r.content, "html.parser")
-
-
-# In[10]:
-
-
-print (bs.prettify)
-
-
-# In[11]:
-
-
-print(bs.p.get_text())
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[12]:
+# In[45]:
 
 
 df_sinopsis = pd.read_csv('sinopsis.csv')
 
 
-# In[13]:
+# In[46]:
 
 
 df_usuario = pd.read_csv('Usuario_0.csv')
@@ -173,7 +132,25 @@ df_usuario = pd.read_csv('Usuario_0.csv')
 
 
 
-# In[14]:
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[47]:
 
 
 def juntarMoviesSinopsis(df_movies, df_sinopsis, movieId, movies_sinopsis):
@@ -188,7 +165,7 @@ def juntarMoviesSinopsis(df_movies, df_sinopsis, movieId, movies_sinopsis):
     return df_movies_sinopsis
 
 
-# In[15]:
+# In[48]:
 
 
 #Comprobar que crea y elimina y guarda en un fichero csv
@@ -196,14 +173,105 @@ df_movies_sinopsis = juntarMoviesSinopsis(df_movies, df_sinopsis, 'movieId', 'mo
 print(df_movies_sinopsis)
 
 
-# In[51]:
+# In[ ]:
+
+
+
+
+
+# In[49]:
+
+
+def get_sinopsis(movie_id):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
+
+    # Buscar la sinopsis en el archivo CSV
+    for i, row in df.iterrows():
+        if row["movieId"] == movie_id:
+            return row["sinopsis"]
+    return "Sinopsis no encontrada"
+
+# Ejemplo de uso
+movie_id = 2
+sinopsis = get_sinopsis(movie_id)
+print(sinopsis)
+
+
+# In[52]:
+
+
+def get_sinopsis(title):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
+
+    # Buscar la sinopsis en el archivo CSV
+    for i, row in df.iterrows():
+        if row["title"] == title:
+            return row["sinopsis"]
+    return "Sinopsis no encontrada"
+
+# Ejemplo de uso
+title = "Toy Story (1995)"
+sinopsis = get_sinopsis(title)
+print(sinopsis)
+
+
+# In[57]:
+
+
+def get_movie_info(movieId, title):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
+
+    # Buscar la pelicula en el archivo CSV
+    for i, row in df.iterrows():
+        if row[title] == movieId:
+            return row[["movieId", "titulo", "genero","sinopsis"]]
+    return "Pelicula no encontrada"
+
+# Ejemplo de uso
+movieId = 1
+title = "Toy Story (1995)"
+movie_info = get_movie_info(movieId, title)
+print(movie_info)
+
+
+# In[62]:
+
+
+def get_movie_info(buscar):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
+    search_by = {"id": "movieId", "titulo": "title"}
+    
+    # Buscar la pelicula en el archivo CSV
+    for i, row in df.iterrows():
+        if row[search_by[buscar[0]]] == buscar[1]:
+            return row[["movieId", "title", "genres","sinopsis"]]
+    return "Pelicula no encontrada"
+
+# Ejemplo de uso mediante id y titulo
+buscar = ("id", 1)
+buscar = ("titulo", "Toy Story (1995)")
+movie_info = get_movie_info(buscar)
+print(movie_info)
+
+
+# In[ ]:
+
+
+
+
+
+# In[23]:
 
 
 df_movies = pd.read_csv('movies.csv')
 df_usuario = pd.read_csv('Usuario_0.csv')
 
 
-# In[54]:
+# In[24]:
 
 
 def sacarPelisNoVistasPorU0(df_movies, df_usuario, movieId, PNVU0):
@@ -221,7 +289,7 @@ def sacarPelisNoVistasPorU0(df_movies, df_usuario, movieId, PNVU0):
     return dfPNVU0
 
 
-# In[55]:
+# In[25]:
 
 
 #Comprobar que crea y elimina y guarda en un fichero csv
@@ -229,7 +297,7 @@ dfPNVU0 = sacarPelisNoVistasPorU0(df_movies, df_usuario, 'movieId', 'PNVU0.csv')
 print(dfPNVU0)
 
 
-# In[56]:
+# In[26]:
 
 
 dfPNVU0
@@ -244,11 +312,94 @@ dfPNVU0
 # In[ ]:
 
 
+# Tokenizar
+tokens = word_tokenize(sinopsis)
 
+# Eliminar stopwords
+stop_words = set(stopwords.words("spanish"))
+tokens = [token for token in tokens if token.lower() not in stop_words]
+
+# Stemming
+stemmer = SnowballStemmer("spanish")
+tokens = [stemmer.stem(token) for token in tokens]
+
+# Frecuencia de palabras
+freq = nltk.FreqDist(tokens)
+print(freq.most_common(10))
+
+
+# In[54]:
+
+
+class procesarTexto():
+    
+    def tokenize(text):
+        
+        return nltk.word_tokenize(text)
+    
+    def clean_text(text):
+        # Eliminar números
+        text = re.sub(r'\d+', '', text)
+        # Eliminar signos de puntuación
+        text = re.sub(r'[^\w\s]', '', text)
+        # Convertir a minúsculas
+        text = text.lower()
+        return text
+
+    def remove_stopwords(text):
+        # Cargar lista de stopwords en español
+        stop_words = set(stopwords.words("spanish"))
+        # Tokenizar el texto
+        tokens = word_tokenize(text)
+        # Eliminar stopwords
+        filtered_tokens = [token for token in tokens if token.lower() not in stop_words]
+        # Unir los tokens en una cadena de texto
+        filtered_text = ' '.join(filtered_tokens)
+        return filtered_text
+    
+    def stem_text(text):
+        # Tokenizar el texto
+        tokens = word_tokenize(text)
+        # Crear un objeto stemmer
+        stemmer = SnowballStemmer("spanish")
+        # Aplicar stemming a cada token
+        stemmed_tokens = [stemmer.stem(token) for token in tokens]
+        # Unir los tokens en una cadena de texto
+        stemmed_text = ' '.join(stemmed_tokens)
+        return stemmed_text
+    
+    def word_frequency(text):
+        # Tokenizar el texto
+        tokens = word_tokenize(text)
+        # Contar la frecuencia de cada token
+        freq = nltk.FreqDist(tokens)
+        # Devolver diccionario con la frecuencia de cada palabra
+        return dict(freq)
+    
+    
 
 
 # In[ ]:
 
 
+def get_sinopsis(title):
+    # Leer el archivo CSV
+    df = pd.read_csv("movies_sinopsis.csv")
 
+    # Buscar la sinopsis en el archivo CSV
+    for i, row in df.iterrows():
+        if row["title"] == title:
+            sinopsis = row["sinopsis"]
+            sinopsis = clean_text(sinopsis)
+            sinopsis = remove_stopwords(sinopsis)
+            sinopsis = stem_text(sinopsis)
+            frequency = word_frequency(sinopsis)
+            return sinopsis, frequency
+    return "Sinopsis no encontrada"
+
+# Ejemplo de uso
+title = "Toy Story (1995)"
+sinopsis, frequency = get_sinopsis(title)
+print(sinopsis)
+print(frequency)
 
