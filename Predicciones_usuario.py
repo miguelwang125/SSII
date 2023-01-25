@@ -1,28 +1,15 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[91]:
-
-
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 
-
-# In[102]:
-
-
-def predecir_puntuacion():
+def predecir_puntuacion(film):
     # Lectura de los de CSV
     usuario = pd.read_csv("Usuario_0.csv")
     movies = pd.read_csv("movies.csv")
    
     #juntar los dos dataframe = pelis vistas por el usuario 
     peliculas_vistas = pd.merge(usuario, movies, on='movieId') 
-
-    # Crear una instancia del vectorizador
-    vectorizer = CountVectorizer()
 
     # se crea una matriz con los generos que hay 
     coun_vect = CountVectorizer()
@@ -41,16 +28,9 @@ def predecir_puntuacion():
     model = LinearRegression().fit(X_train, y_train)
     
     y_pred = model.predict(X_test)
-    
-    prueba = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
-    
-    # score = precisión del modelo
-    print("score: ")
-    print(model.score(X_test, y_test))
 
     # Seleccionar la película con el título
-    peliculas_novistas = movies[movies["title"]== "Balto (1995)"]
-    #print(peliculas_novistas)
+    peliculas_novistas = movies[movies["title"]== film]
 
     # Vectorizar la pelicula elegida
     peliculas_novistas_vectorized = coun_vect.transform(peliculas_novistas["genres"])
@@ -60,14 +40,7 @@ def predecir_puntuacion():
     
     # predecir la puntuación de la pelicula seleccionada
     predicted_rating = model.predict(noVista)
-    print(predicted_rating)
-
-predecir_puntuacion()
-    
-
-
-# In[87]:
-
+    return predicted_rating
 
 def RecomendacionDadoUsuario():
     
@@ -88,7 +61,6 @@ def RecomendacionDadoUsuario():
     X = count_matrix
     y = peliculas_vistas["rating"]
 
-
     # Se crea el modelo y se entrena 
     model = RandomForestRegressor().fit(X, y)
 
@@ -105,7 +77,6 @@ def RecomendacionDadoUsuario():
 
     # predecir la puntuacion de las peliculas no vistas
     y_pred = model.predict(X_no_vistas)
-    print(y_pred)
 
     # añade la puntuacion predicha al dataframe de peliculas no vistas
     movies_noRatings["predicted_rating"] = y_pred
@@ -114,20 +85,4 @@ def RecomendacionDadoUsuario():
     movies_noRatings = movies_noRatings.sort_values(by="predicted_rating", ascending=False)
 
     # imprime las 10 primeras peliculas luego de ser ordenadas, estas son las recomendadas
-    print(movies_noRatings["title"].head(10))
-    print(movies_noRatings.head(10))
-    
-RecomendacionDadoUsuario()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
+    return movies_noRatings["title"].head(10)
